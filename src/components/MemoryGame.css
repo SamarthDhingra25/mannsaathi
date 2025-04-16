@@ -1,0 +1,24 @@
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 80px);
+  justify-content: center;
+  gap: 15px;
+}
+
+.memory-card {
+  width: 80px;
+  height: 80px;
+  background-color: #f0f8ff;
+  font-size: 2rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.memory-card.flipped {
+  background-color: #d1e7dd;
+  color: #1b4332;
+}
