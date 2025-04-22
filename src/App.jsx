@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './components/home';
+import Home from './components/Home';
 import MemoryGame from './components/MemoryGame';
 import BreathingGame from './components/BreathingExercise';
 import MeditationChoiceGame from './components/MeditationChoiceGame';
