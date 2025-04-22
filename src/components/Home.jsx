@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import YogaPoses from '../components/YogaPoses'; 
 
 function Home() {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ function Home() {
           <button className="btn btn-outline-warning" onClick={() => navigate('/meditation-choice-game')}> Guided Meditation</button>
           <button className="btn btn-outline-info" onClick={() => navigate('/coloring-game')}> Coloring Game</button>
         </div>
+        <YogaPoses/>
       </div>
     </div>
     <Footer/>
