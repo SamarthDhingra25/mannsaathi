@@ -1,7 +1,7 @@
-import axios from 'axios';  // Ensure this line is present at the top of your file
+import axios from 'axios';  
 
 const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const API_KEY = import.meta.env.VITE_GROQ_API_KEY;  // Replace with your Groq API key
+const API_KEY = import.meta.env.VITE_GROQ_API_KEY; 
 
 export const sendMessageToGroq = async (userMessage) => {
   try {

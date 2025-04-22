@@ -6,11 +6,10 @@ function BreathingExercise() {
   const [animationClass, setAnimationClass] = useState('inhale');
 
   useEffect(() => {
-    // Change the breathing phase every 5 seconds (2.5s inhale, 2.5s exhale)
     const timer = setInterval(() => {
       setBreathingPhase((prevPhase) => (prevPhase === 'inhale' ? 'exhale' : 'inhale'));
       setAnimationClass((prevClass) => (prevClass === 'inhale' ? 'exhale' : 'inhale'));
-    }, 5000); // Change every 5 seconds (inhale + exhale time)
+    }, 5000); 
 
     return () => clearInterval(timer);
   }, []);

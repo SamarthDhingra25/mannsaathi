@@ -1,4 +1,4 @@
-/* General Styles */
+
 .breathing-exercise {
   text-align: center;
   margin-top: 50px;
@@ -39,11 +39,11 @@
 }
 
 .breathing-circle.inhale {
-  transform: scale(1.3); /* Expands during inhale */
+  transform: scale(1.3); 
 }
 
 .breathing-circle.exhale {
-  transform: scale(1); /* Contracts during exhale */
+  transform: scale(1); 
 }
 
 .instruction {

@@ -2,23 +2,20 @@ import React, { useState } from 'react';
 import './ColoringGame.css';
 
 function ColoringGame() {
-  const [selectedColor, setSelectedColor] = useState('#000000'); // Default color is black
+  const [selectedColor, setSelectedColor] = useState('#000000'); 
   const [isDrawing, setIsDrawing] = useState(false);
   const [coordinates, setCoordinates] = useState([]);
 
-  // Function to start drawing
   const startDrawing = (e) => {
     setIsDrawing(true);
     setCoordinates([e.clientX, e.clientY]);
   };
 
-  // Function to stop drawing
   const stopDrawing = () => {
     setIsDrawing(false);
     setCoordinates([]);
   };
 
-  // Function to draw the line
   const draw = (e) => {
     if (!isDrawing) return;
     const newCoordinates = [...coordinates, e.clientX, e.clientY];

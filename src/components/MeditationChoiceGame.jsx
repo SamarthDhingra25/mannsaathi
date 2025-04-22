@@ -1,5 +1,20 @@
 import React, { useState } from 'react';
 
+const mediaData = {
+  'Ocean Calm': {
+    audio: '/media/ocean-waves-250310.mp3',
+    video: '/media/1390942-uhd_4096_2160_24fps.mp4',
+  },
+  'Forest Serenity': {
+    audio: '/media/forest-ambience-296528.mp3',
+    video: '/media/1448735-uhd_4096_2160_24fps.mp4',
+  },
+  'Sleep & Relax': {
+    audio: '/media/relaxing-guitar-music-volume-2-128532.mp3',
+    video: null,
+  },
+};
+
 function MeditationChoiceGame() {
   const [selectedTheme, setSelectedTheme] = useState(null);
 
@@ -12,30 +27,36 @@ function MeditationChoiceGame() {
       <h2>🧘‍♀️ Guided Meditation</h2>
       <p>Choose a meditation theme:</p>
       <div className="d-flex justify-content-center gap-3 mb-4">
-        <button
-          className="btn btn-outline-primary"
-          onClick={() => handleThemeSelect('Ocean Calm')}
-        >
-          🌊 Ocean Calm
-        </button>
-        <button
-          className="btn btn-outline-success"
-          onClick={() => handleThemeSelect('Forest Serenity')}
-        >
-          🌲 Forest Serenity
-        </button>
-        <button
-          className="btn btn-outline-warning"
-          onClick={() => handleThemeSelect('Sleep & Relax')}
-        >
-          ✨ Sleep & Relax
-        </button>
+        {Object.keys(mediaData).map((theme) => (
+          <button
+            key={theme}
+            className="btn btn-outline-primary"
+            onClick={() => handleThemeSelect(theme)}
+          >
+            {theme === 'Ocean Calm' && '🌊'}
+            {theme === 'Forest Serenity' && '🌲'}
+            {theme === 'Sleep & Relax' && '✨'} {theme}
+          </button>
+        ))}
       </div>
+
       {selectedTheme && (
         <div className="mt-4">
-          <h3>Playing: {selectedTheme}</h3>
-          <p>Your selected meditation theme will play shortly...</p>
-          {/* You can integrate audio or video prompts here */}
+          <h3>Now Playing: {selectedTheme}</h3>
+          <video
+            src={mediaData[selectedTheme].video}
+            width="480"
+            height="270"
+            controls
+            style={{ borderRadius: '10px', marginBottom: '1rem' }}
+          />
+          <audio
+            src={mediaData[selectedTheme].audio}
+            controls
+            autoPlay
+          >
+            Your browser does not support the audio element.
+          </audio>
         </div>
       )}
     </div>

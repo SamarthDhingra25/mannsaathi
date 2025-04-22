@@ -44,7 +44,7 @@ function MoodTracker() {
 
   const handleMoodSelect = (mood) => {
     const today = new Date().toISOString().split('T')[0];
-    const updatedLog = moodLog.filter(entry => entry.date !== today); // Replace if already logged today
+    const updatedLog = moodLog.filter(entry => entry.date !== today); 
     updatedLog.push({ date: today, mood });
     setMoodLog(updatedLog);
     setSelectedMood(mood);
