@@ -1,6 +1,4 @@
-
 import React, { useState, useEffect } from 'react';
-
 
 const yogaPoses = [
   {
@@ -19,17 +17,16 @@ const yogaPoses = [
     benefit: "Improves blood circulation.",
   },
   {
-    name: "shavasana",
+    name: "Shavasana",
     image: "/media/sh.jpg",
     benefit: "Reduces stress.",
   },
-  
 ];
 
 function YogaPoses() {
   const [isSessionActive, setSessionActive] = useState(false);
   const [currentPoseIndex, setCurrentPoseIndex] = useState(0);
-  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audio, setAudio] = useState(null);
 
   const musicURL = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
 
@@ -44,11 +41,21 @@ function YogaPoses() {
   }, [isSessionActive]);
 
   const toggleSession = () => {
-    setSessionActive(!isSessionActive);
-    if (!audioPlaying) {
-      new Audio(musicURL).play();
-      setAudioPlaying(true);
+    if (!isSessionActive) {
+   
+      const newAudio = new Audio(musicURL);
+      newAudio.loop = true; 
+      newAudio.play();
+      setAudio(newAudio);
+    } else {
+     
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0; 
+      }
+      setAudio(null);
     }
+    setSessionActive(!isSessionActive);
   };
 
   return (
