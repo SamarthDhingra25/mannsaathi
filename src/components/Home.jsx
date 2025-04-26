@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import YogaPoses from '../components/YogaPoses'; 
+import EmergencySupport from './EmergencySupport';
 
 function Home() {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ function Home() {
           <button className="btn btn-outline-info" onClick={() => navigate('/coloring-game')}> Coloring Game</button>
         </div>
         <YogaPoses/>
+        <EmergencySupport />
       </div>
     </div>
     <Footer/>
