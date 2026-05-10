@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './components/LandingPage';
 import Home from './components/Home';
 import EmergencySupport from './components/EmergencySupport';
 import CallHelpline from './components/CallHelpline';
@@ -17,13 +18,15 @@ import Register from './components/Register';
 import MoodTracker from './components/MoodTracker';
 import AssessmentQuiz from './components/AssessmentQuiz';
 
+
 function App() {
   return (
     <Router>
       <div>
-      <EmergencySupport/>
+      {/* <EmergencySupport/> */}
       <Routes>
-        <Route path="/" element={<Home />} />
+         <Route path="/" element={<LandingPage />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/callhelpline" element={<CallHelpline />} />
         <Route path="/groundingexercise" element={<GroundingExercise />} />
         <Route path="/talktotherapist" element={<TalkToTherapist />} />
@@ -42,6 +45,7 @@ function App() {
       </Routes>
       </div>
     </Router>
+
   );
 }
 

@@ -1,0 +1,23 @@
+.landing-bg {
+  background: linear-gradient(135deg, #f8fafc, #e0f2fe);
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.hero-section {
+  padding: 120px 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease;
+}
+
+.hero-section.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #2563eb, #14b8a6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

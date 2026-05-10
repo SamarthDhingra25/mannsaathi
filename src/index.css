@@ -1,4 +1,6 @@
-body {
+@import "tailwindcss";
+
+/* body {
   background: linear-gradient(to bottom right, #e0f7fa, #f1f8e9);
   min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
@@ -35,4 +37,4 @@ body.dark-mode h3 {
 
 button {
   border-radius: 30px !important;
-}
+} */
