@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 function Login() {
   const navigate = useNavigate();
@@ -9,24 +12,43 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+
+  try {
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
+    alert("Login Successful!");
+
+    navigate("/dashboard");
+
+  } catch (error) {
+    alert(error.message);
+  } finally {
     setIsLoading(false);
-    navigate("/");
-  };
+  }
+};
+const handleForgotPassword = async () => {
+  if (!email) {
+    alert("Please enter your email first.");
+    return;
+  }
 
-  const handleSignUp = () => {
-    navigate("/register");
-  };
-
-  const handleForgotPassword = () => {
-    navigate("/forgot-password");
-  };
-
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Password reset email sent.");
+  } catch (error) {
+    alert(error.message);
+  }
+};
+const handleSignUp = () => {
+  navigate("/register");
+};
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-50">
       {/* Background Effects */}

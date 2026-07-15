@@ -16,6 +16,7 @@
     "axios": "^1.9.0",
     "bootstrap": "^5.3.5",
     "chart.js": "^4.4.9",
+    "firebase": "^12.16.0",
     "framer-motion": "^12.25.0",
     "lucide-react": "^0.562.0",
     "react": "^19.0.0",

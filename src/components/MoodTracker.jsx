@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import { auth, db } from "../firebase";
+import { collection, addDoc, getDocs, query, where, deleteDoc } from "firebase/firestore";
 import {
   Chart as ChartJS,
   LineElement,
@@ -204,15 +206,8 @@ function MoodTracker() {
   const [averageMood, setAverageMood] = useState(0);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("moodLog")) || [];
-    setMoodLog(stored);
-    calculateStats(stored);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("moodLog", JSON.stringify(moodLog));
-    calculateStats(moodLog);
-  }, [moodLog]);
+  fetchMoodHistory();
+}, []);
 
   const calculateStats = (log) => {
     // Calculate streak
@@ -241,15 +236,54 @@ function MoodTracker() {
       setAverageMood(total / log.length);
     }
   };
+const fetchMoodHistory = async () => {
+  try {
+    const user = auth.currentUser;
+    if (!user) return;
 
-  const handleMoodSelect = (mood) => {
+    const q = query(
+      collection(db, "moods"),
+      where("uid", "==", user.uid)
+    );
+
+    const snapshot = await getDocs(q);
+
+    const moods = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    moods.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    setMoodLog(moods);
+    calculateStats(moods);
+
+  } catch (err) {
+    console.error(err);
+  }
+};
+  const handleMoodSelect = async (mood) => {
+  try {
+    const user = auth.currentUser;
+    if (!user) return;
+
     const today = new Date().toISOString().split("T")[0];
-    const updatedLog = moodLog.filter((entry) => entry.date !== today);
-    updatedLog.push({ date: today, mood });
-    updatedLog.sort((a, b) => new Date(b.date) - new Date(a.date));
-    setMoodLog(updatedLog);
+
+    await addDoc(collection(db, "moods"), {
+      uid: user.uid,
+      mood,
+      date: today,
+      createdAt: new Date()
+    });
+
     setSelectedMood(mood);
-  };
+
+    fetchMoodHistory();
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   const getMoodEmojiByValue = (value) => {
     return moods.find((m) => m.value === value)?.emoji || "😐";
@@ -365,13 +399,25 @@ function MoodTracker() {
     return currentWeek;
   };
 
-  const clearHistory = () => {
-    if (window.confirm("Are you sure you want to clear all mood history?")) {
-      setMoodLog([]);
-      setSelectedMood(null);
-      localStorage.removeItem("moodLog");
-    }
-  };
+  const clearHistory = async () => {
+  if (!window.confirm("Clear all mood history?")) return;
+
+  const user = auth.currentUser;
+
+  const q = query(
+    collection(db, "moods"),
+    where("uid", "==", user.uid)
+  );
+
+  const snapshot = await getDocs(q);
+
+  for (const docSnap of snapshot.docs) {
+    await deleteDoc(docSnap.ref);
+  }
+
+  setMoodLog([]);
+  setSelectedMood(null);
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-teal-50 to-emerald-50">

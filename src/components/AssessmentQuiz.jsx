@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { db } from "../firebase";
+
+import {
+  doc,
+  setDoc,
+} from "firebase/firestore";
 
 const questions = [
   { question: "How often do you feel nervous or anxious?", options: ["Never", "Sometimes", "Often", "Always"], scores: [0,1,2,3], icon:"😌"},
@@ -9,10 +16,11 @@ const questions = [
 ];
 
 function AssessmentQuiz() {
+  const { currentUser } = useAuth();
+  const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState(Array(questions.length).fill(null));
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const handleOptionChange = (qIdx, oIdx) => {
     const newAnswers = [...answers];
@@ -20,13 +28,40 @@ function AssessmentQuiz() {
     setAnswers(newAnswers);
   };
 
-  const calculateScore = () => {
-    const total = answers.reduce((acc, answer, i) => {
-      return acc + (answer !== null ? questions[i].scores[answer] : 0);
-    }, 0);
-    setScore(total);
-    setSubmitted(true);
-  };
+  const calculateScore = async () => {
+  const total = answers.reduce((acc, answer, i) => {
+    return acc + (answer !== null ? questions[i].scores[answer] : 0);
+  }, 0);
+
+  setScore(total);
+  setSubmitted(true);
+
+  await saveAssessment(total);
+};
+
+  const saveAssessment = async (totalScore) => {
+  if (!currentUser) return;
+
+  try {
+    await setDoc(
+      doc(db, "users", currentUser.uid, "assessment", "latest"),
+      {
+        score: totalScore,
+        level:
+          totalScore <= 5
+            ? "Low Stress"
+            : totalScore <= 9
+            ? "Moderate Stress"
+            : "High Stress",
+
+        completed: true,
+        date: new Date().toISOString(),
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   const getResultText = () => {
     if (score <= 5) return "You're doing great! Keep up the good work. 🧘‍♀️";

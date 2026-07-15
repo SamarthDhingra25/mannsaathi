@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
+
 
 function Register() {
+  const [accepted, setAccepted] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -12,16 +17,41 @@ function Register() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+
+  if (formData.password !== formData.confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      formData.email,
+      formData.password
+    );
 
-    setIsLoading(false);
+    const user = userCredential.user;
+
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      name: formData.name,
+      email: formData.email,
+      createdAt: new Date(),
+    });
+
+    alert("Registration Successful!");
+
     navigate("/login");
-  };
 
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -206,50 +236,50 @@ function Register() {
               </div>
 
               {/* Terms Agreement */}
-              <div className="flex items-start space-x-3">
-                <div className="relative flex-shrink-0">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    className="sr-only"
-                    required
-                  />
-                  <div className="w-5 h-5 rounded border-2 border-amber-300 flex items-center justify-center cursor-pointer">
-                    <svg
-                      className="w-3 h-3 text-amber-600 opacity-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <label
-                  htmlFor="terms"
-                  className="text-sm text-amber-700/80 cursor-pointer"
-                >
-                  I agree to the{" "}
-                  <button
-                    type="button"
-                    className="text-amber-600 hover:text-amber-800 font-medium transition-colors duration-200"
-                  >
-                    Terms of Service
-                  </button>{" "}
-                  and{" "}
-                  <button
-                    type="button"
-                    className="text-amber-600 hover:text-amber-800 font-medium transition-colors duration-200"
-                  >
-                    Privacy Policy
-                  </button>
-                </label>
-              </div>
+             <div className="flex items-start space-x-3">
+  <input
+    type="checkbox"
+    id="terms"
+    checked={accepted}
+    onChange={(e) => setAccepted(e.target.checked)}
+    className="hidden"
+  />
+
+  <label
+    htmlFor="terms"
+    className="w-5 h-5 rounded border-2 border-amber-300 flex items-center justify-center cursor-pointer"
+  >
+    {accepted && (
+      <svg
+        className="w-3 h-3 text-amber-600"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M5 13l4 4L19 7"
+        />
+      </svg>
+    )}
+  </label>
+
+  <label
+    htmlFor="terms"
+    className="text-sm text-amber-700/80 cursor-pointer"
+  >
+    I agree to the{" "}
+    <button type="button" className="text-amber-600">
+      Terms of Service
+    </button>{" "}
+    and{" "}
+    <button type="button" className="text-amber-600">
+      Privacy Policy
+    </button>
+  </label>
+</div>
 
               {/* Register Button */}
               <button

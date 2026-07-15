@@ -17,6 +17,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import MoodTracker from './components/MoodTracker';
 import AssessmentQuiz from './components/AssessmentQuiz';
+import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./components/Dashboard";
 
 
 function App() {
@@ -26,21 +28,75 @@ function App() {
       {/* <EmergencySupport/> */}
       <Routes>
          <Route path="/" element={<LandingPage />} />
-        <Route path="/home" element={<Home />} />
+       <Route
+  path="/home"
+  element={
+    <ProtectedRoute>
+      <Home />
+    </ProtectedRoute>
+  }
+/>
         <Route path="/callhelpline" element={<CallHelpline />} />
         <Route path="/groundingexercise" element={<GroundingExercise />} />
         <Route path="/talktotherapist" element={<TalkToTherapist />} />
         <Route path="/memory-game" element={<MemoryGame />} />
         <Route path="/breathing-game" element={<BreathingGame />} />
         <Route path="/meditation-choice-game" element={<MeditationChoiceGame />} />
-        <Route path="/text-chat" element={<TextChat />} />
-        <Route path="/audio-chat" element={<AudioChat />} />
-        <Route path="/video-chat" element={<VideoChat />} />
+       <Route
+  path="/text-chat"
+  element={
+    <ProtectedRoute>
+      <TextChat />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/audio-chat"
+  element={
+    <ProtectedRoute>
+      <AudioChat />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/video-chat"
+  element={
+    <ProtectedRoute>
+      <VideoChat />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/mood-tracker"
+  element={
+    <ProtectedRoute>
+      <MoodTracker />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/assessment-quiz"
+  element={
+    <ProtectedRoute>
+      <AssessmentQuiz />
+    </ProtectedRoute>
+  }
+/>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/coloring-game" element={<ColoringGame />} />
-        <Route path="/mood-tracker" element={<MoodTracker />} />
-        <Route path="/assessment-quiz" element={<AssessmentQuiz />} />
+        <Route
+  path="/dashboard"
+  element={
+    <ProtectedRoute>
+      <Dashboard />
+    </ProtectedRoute>
+  }
+/>
 
       </Routes>
       </div>

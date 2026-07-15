@@ -1,4 +1,8 @@
 import CalmBackground from "./CalmBackground";
+import { useAuth } from "../context/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 import { useEffect } from "react";
 import { motion } from "framer-motion";
@@ -15,6 +19,13 @@ import {
 } from "lucide-react";
 
 export default function LandingPage() {
+  const { currentUser } = useAuth();
+const navigate = useNavigate();
+
+const handleLogout = async () => {
+  await signOut(auth);
+  navigate("/login");
+};
   const scrollToSection = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -43,12 +54,30 @@ export default function LandingPage() {
             >
               Features
             </button>
-            <a href="/login" className="px-4 py-2 rounded-lg border border-indigo-400 text-indigo-400 hover:bg-indigo-400 hover:text-black transition">
-              Login
-            </a>
-            <a href="/register" className="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-black font-semibold transition">
-              Get Started
-            </a>
+            {currentUser ? (
+  <button
+    onClick={handleLogout}
+    className="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition"
+  >
+    Logout
+  </button>
+) : (
+  <>
+    <a
+      href="/login"
+      className="px-4 py-2 rounded-lg border border-indigo-400 text-indigo-400 hover:bg-indigo-400 hover:text-black transition"
+    >
+      Login
+    </a>
+
+    <a
+      href="/register"
+      className="px-5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-black font-semibold transition"
+    >
+      Get Started
+    </a>
+  </>
+)}
           </div>
         </div>
       </nav>

@@ -1,8 +1,23 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const handleLogout = async () => {
+  try {
+    await signOut(auth);
+    alert("Logged out successfully!");
+    navigate("/login");
+  } catch (error) {
+    alert(error.message);
+  }
+};
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-gradient-to-b from-gray-900/95 via-gray-900/90 to-transparent backdrop-blur-xl transition-all duration-300 border-b border-gray-800/50">
@@ -46,6 +61,7 @@ function Navbar() {
             >
               About
             </Link>
+           
           </div>
 
           {/* Action Buttons - Right Side */}
@@ -69,22 +85,31 @@ function Navbar() {
             <div className="h-6 w-px bg-gray-700"></div>
 
             <div className="flex items-center space-x-3">
-              <Link
-                to="/login"
-                className="px-6 py-2.5 text-gray-300 hover:text-white transition-all duration-200 text-sm font-medium rounded-full hover:bg-gray-800/30"
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="relative px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-full text-sm transition-all duration-300 overflow-hidden group hover:shadow-xl hover:shadow-blue-900/30 hover:scale-105"
-              >
-                <div className="absolute inset-0 w-0 bg-white/20 transition-all duration-300 group-hover:w-full rounded-full"></div>
-                <span className="relative flex items-center gap-2">
-                  Register
-                </span>
-              </Link>
-            </div>
+  {currentUser ? (
+    <button
+      onClick={handleLogout}
+      className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full text-sm font-medium transition"
+    >
+      Logout
+    </button>
+  ) : (
+    <>
+      <Link
+        to="/login"
+        className="px-6 py-2.5 text-gray-300 hover:text-white transition-all duration-200 text-sm font-medium rounded-full hover:bg-gray-800/30"
+      >
+        Login
+      </Link>
+
+      <Link
+        to="/register"
+        className="relative px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-full text-sm transition-all duration-300 overflow-hidden group hover:shadow-xl hover:shadow-blue-900/30 hover:scale-105"
+      >
+        Register
+      </Link>
+    </>
+  )}
+</div>
           </div>
         </div>
 
@@ -135,22 +160,37 @@ function Navbar() {
                 >
                   Mood Tracker
                 </Link>
-                <div className="pt-2 space-y-2">
-                  <Link
-                    to="/login"
-                    className="block px-4 py-2 text-center text-gray-300 hover:text-white hover:bg-gray-800/30 rounded-lg"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="block px-4 py-2 text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Register
-                  </Link>
-                </div>
+               <div className="pt-2 space-y-2">
+  {currentUser ? (
+    <button
+      onClick={() => {
+        handleLogout();
+        setIsMenuOpen(false);
+      }}
+      className="w-full px-4 py-2 bg-red-600 text-white rounded-lg"
+    >
+      Logout
+    </button>
+  ) : (
+    <>
+      <Link
+        to="/login"
+        className="block px-4 py-2 text-center text-gray-300 hover:text-white hover:bg-gray-800/30 rounded-lg"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        Login
+      </Link>
+
+      <Link
+        to="/register"
+        className="block px-4 py-2 text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        Register
+      </Link>
+    </>
+  )}
+</div>
               </div>
             </div>
           )}
