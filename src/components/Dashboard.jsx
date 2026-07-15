@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import AIInsights from "./AIInsights";
@@ -18,82 +18,82 @@ function Dashboard() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [latestMood, setLatestMood] = useState("No Mood");
-const [moodCount, setMoodCount] = useState(0);
-const [streak, setStreak] = useState(0);
+  const [moodCount, setMoodCount] = useState(0);
+  const [streak, setStreak] = useState(0);
 
-useEffect(() => {
-  if (!currentUser) return;
+  useEffect(() => {
+    if (!currentUser) return;
 
-  const fetchMoodData = async () => {
-    try {
-      const moodRef = collection(
-        db,
-        "users",
-        currentUser.uid,
-        "moods"
-      );
+    const fetchMoodData = async () => {
+      try {
+        const moodRef = collection(
+          db,
+          "users",
+          currentUser.uid,
+          "moods"
+        );
 
-      const snapshot = await getDocs(moodRef);
+        const snapshot = await getDocs(moodRef);
 
-      setMoodCount(snapshot.size);
+        setMoodCount(snapshot.size);
 
-      let moods = [];
+        let moods = [];
 
-      snapshot.forEach((doc) => {
-        moods.push(doc.data());
-      });
+        snapshot.forEach((doc) => {
+          moods.push(doc.data());
+        });
 
-      moods.sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      );
+        moods.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
 
-      if (moods.length > 0) {
-        setLatestMood(moods[0].mood.label);
+        if (moods.length > 0) {
+          setLatestMood(moods[0].mood.label);
+        }
+        const assessmentRef = doc(
+          db,
+          "users",
+          currentUser.uid,
+          "assessment",
+          "latest"
+        );
+
+        const assessmentSnap = await getDoc(assessmentRef);
+
+        if (assessmentSnap.exists()) {
+          setAssessment(assessmentSnap.data().level);
+        }
+
+        // ---------- Calculate Streak ----------
+        let currentStreak = 0;
+
+        const dates = moods.map((m) => m.date);
+
+        const today = new Date();
+
+        for (let i = 0; i < dates.length; i++) {
+          const expected = new Date();
+          expected.setDate(today.getDate() - i);
+
+          const expectedDate = expected
+            .toISOString()
+            .split("T")[0];
+
+          if (dates.includes(expectedDate))
+            currentStreak++;
+          else break;
+        }
+
+        setStreak(currentStreak);
+
+      } catch (err) {
+        console.log(err);
       }
-      const assessmentRef = doc(
-  db,
-  "users",
-  currentUser.uid,
-  "assessment",
-  "latest"
-);
+    };
 
-const assessmentSnap = await getDoc(assessmentRef);
+    fetchMoodData();
 
-if (assessmentSnap.exists()) {
-  setAssessment(assessmentSnap.data().level);
-}
-
-      // ---------- Calculate Streak ----------
-      let currentStreak = 0;
-
-      const dates = moods.map((m) => m.date);
-
-      const today = new Date();
-
-      for (let i = 0; i < dates.length; i++) {
-        const expected = new Date();
-        expected.setDate(today.getDate() - i);
-
-        const expectedDate = expected
-          .toISOString()
-          .split("T")[0];
-
-        if (dates.includes(expectedDate))
-          currentStreak++;
-        else break;
-      }
-
-      setStreak(currentStreak);
-
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  fetchMoodData();
-
-}, [currentUser]);
+  }, [currentUser]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 p-10">
@@ -131,9 +131,9 @@ if (assessmentSnap.exists()) {
 
 
         </div>
-<div className="mt-10">
-  <AIInsights />
-</div>
+        <div className="mt-10">
+          <AIInsights />
+        </div>
 
         <div className="mt-10 flex gap-4">
 
@@ -151,11 +151,11 @@ if (assessmentSnap.exists()) {
             Take Assessment
           </button>
           <button
-  onClick={() => navigate("/home")}
-  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl"
->
-  Home
-</button>
+            onClick={() => navigate("/home")}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl"
+          >
+            Home
+          </button>
 
         </div>
 

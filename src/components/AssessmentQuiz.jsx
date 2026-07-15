@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authContext";
 import { db } from "../firebase";
 
 import {
@@ -8,11 +8,11 @@ import {
 } from "firebase/firestore";
 
 const questions = [
-  { question: "How often do you feel nervous or anxious?", options: ["Never", "Sometimes", "Often", "Always"], scores: [0,1,2,3], icon:"😌"},
-  { question: "How well are you sleeping lately?", options: ["Very well","Okay","Not great","Poor"], scores:[0,1,2,3], icon:"😴"},
-  { question: "How often do you feel overwhelmed?", options: ["Rarely","Sometimes","Often","Almost Always"], scores:[0,1,2,3], icon:"😰"},
-  { question: "Do you experience sudden mood changes?", options: ["Never","Occasionally","Frequently","All the time"], scores:[0,1,2,3], icon:"🎭"},
-  { question: "How connected do you feel with friends/family?", options: ["Very connected","Somewhat","Not much","Disconnected"], scores:[0,1,2,3], icon:"👨‍👩‍👧‍👦"},
+  { question: "How often do you feel nervous or anxious?", options: ["Never", "Sometimes", "Often", "Always"], scores: [0, 1, 2, 3], icon: "😌" },
+  { question: "How well are you sleeping lately?", options: ["Very well", "Okay", "Not great", "Poor"], scores: [0, 1, 2, 3], icon: "😴" },
+  { question: "How often do you feel overwhelmed?", options: ["Rarely", "Sometimes", "Often", "Almost Always"], scores: [0, 1, 2, 3], icon: "😰" },
+  { question: "Do you experience sudden mood changes?", options: ["Never", "Occasionally", "Frequently", "All the time"], scores: [0, 1, 2, 3], icon: "🎭" },
+  { question: "How connected do you feel with friends/family?", options: ["Very connected", "Somewhat", "Not much", "Disconnected"], scores: [0, 1, 2, 3], icon: "👨‍👩‍👧‍👦" },
 ];
 
 function AssessmentQuiz() {
@@ -29,39 +29,39 @@ function AssessmentQuiz() {
   };
 
   const calculateScore = async () => {
-  const total = answers.reduce((acc, answer, i) => {
-    return acc + (answer !== null ? questions[i].scores[answer] : 0);
-  }, 0);
+    const total = answers.reduce((acc, answer, i) => {
+      return acc + (answer !== null ? questions[i].scores[answer] : 0);
+    }, 0);
 
-  setScore(total);
-  setSubmitted(true);
+    setScore(total);
+    setSubmitted(true);
 
-  await saveAssessment(total);
-};
+    await saveAssessment(total);
+  };
 
   const saveAssessment = async (totalScore) => {
-  if (!currentUser) return;
+    if (!currentUser) return;
 
-  try {
-    await setDoc(
-      doc(db, "users", currentUser.uid, "assessment", "latest"),
-      {
-        score: totalScore,
-        level:
-          totalScore <= 5
-            ? "Low Stress"
-            : totalScore <= 9
-            ? "Moderate Stress"
-            : "High Stress",
+    try {
+      await setDoc(
+        doc(db, "users", currentUser.uid, "assessment", "latest"),
+        {
+          score: totalScore,
+          level:
+            totalScore <= 5
+              ? "Low Stress"
+              : totalScore <= 9
+                ? "Moderate Stress"
+                : "High Stress",
 
-        completed: true,
-        date: new Date().toISOString(),
-      }
-    );
-  } catch (err) {
-    console.log(err);
-  }
-};
+          completed: true,
+          date: new Date().toISOString(),
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const getResultText = () => {
     if (score <= 5) return "You're doing great! Keep up the good work. 🧘‍♀️";
@@ -140,8 +140,8 @@ function AssessmentQuiz() {
               </span>
             </div>
             <div className="h-1.5 sm:h-2 bg-gray-800 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-full transition-all duration-500" 
+              <div
+                className="h-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-full transition-all duration-500"
                 style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
               ></div>
             </div>
@@ -166,9 +166,9 @@ function AssessmentQuiz() {
               {/* Options */}
               <div className="grid grid-cols-1 gap-3 sm:gap-4 mb-6 sm:mb-8">
                 {questions[currentQuestion].options.map((option, j) => (
-                  <div 
-                    key={j} 
-                    className={`group cursor-pointer transition-all duration-300 ${answers[currentQuestion] === j ? "transform scale-[1.02]" : "hover:scale-[1.02]"}`} 
+                  <div
+                    key={j}
+                    className={`group cursor-pointer transition-all duration-300 ${answers[currentQuestion] === j ? "transform scale-[1.02]" : "hover:scale-[1.02]"}`}
                     onClick={() => handleOptionChange(currentQuestion, j)}
                   >
                     <div className={`relative overflow-hidden rounded-xl sm:rounded-2xl border-2 ${answers[currentQuestion] === j ? "border-purple-500 bg-gradient-to-br from-purple-600/20 to-blue-600/20" : "border-gray-700/50 bg-gray-800/20 hover:border-purple-500/50"} p-4 sm:p-6 backdrop-blur-sm`}>
@@ -196,8 +196,8 @@ function AssessmentQuiz() {
 
               {/* Navigation Buttons */}
               <div className="flex justify-between items-center">
-                <button 
-                  onClick={prevQuestion} 
+                <button
+                  onClick={prevQuestion}
                   disabled={currentQuestion === 0}
                   className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-medium transition-all duration-300 flex items-center gap-1 sm:gap-2 ${currentQuestion === 0 ? "opacity-50 cursor-not-allowed" : "text-gray-400 hover:text-white hover:bg-gray-800/30"}`}
                   aria-label="Previous question"
@@ -210,7 +210,7 @@ function AssessmentQuiz() {
 
                 <div className="flex items-center gap-3 sm:gap-4">
                   {answers.every(a => a !== null) && currentQuestion === questions.length - 1 ? (
-                    <button 
+                    <button
                       onClick={calculateScore}
                       className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-full text-base sm:text-lg transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-900/40 hover:scale-105"
                       aria-label="Submit assessment"
@@ -224,8 +224,8 @@ function AssessmentQuiz() {
                       </span>
                     </button>
                   ) : (
-                    <button 
-                      onClick={nextQuestion} 
+                    <button
+                      onClick={nextQuestion}
                       disabled={answers[currentQuestion] === null}
                       className={`group px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 flex items-center gap-2 sm:gap-3 ${answers[currentQuestion] === null ? "opacity-50 cursor-not-allowed bg-gray-700/30 text-gray-500" : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-2xl hover:shadow-blue-900/40 hover:scale-105"}`}
                       aria-label="Next question"
@@ -243,7 +243,7 @@ function AssessmentQuiz() {
             {/* Question Dots */}
             <div className="flex justify-center gap-2 sm:gap-3 mt-6 sm:mt-8">
               {questions.map((_, idx) => (
-                <button 
+                <button
                   key={idx}
                   onClick={() => setCurrentQuestion(idx)}
                   className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${currentQuestion === idx ? "bg-gradient-to-r from-blue-500 to-purple-500 scale-125" : answers[idx] !== null ? "bg-gray-500 hover:bg-gray-400" : "bg-gray-700 hover:bg-gray-600"}`}

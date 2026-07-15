@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authContext";
 import { db } from "../firebase";
 import {
   collection,
@@ -50,8 +50,8 @@ Friendly tone.
 
         headers: {
           "Content-Type": "application/json",
-Authorization:
-`Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
+          Authorization:
+            `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
         },
 
         body: JSON.stringify({
